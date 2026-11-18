@@ -4,7 +4,7 @@ Aplikasi desktop berbasis **Java Swing** untuk membantu pengelolaan anggaran bul
 
 ---
 
-## ✨ Fitur Utama
+##  Fitur Utama
 
 1. **Pengelola Keuangan & Prioritas (`PanelKeuangan`)**
    - Mencatat pengeluaran harian berdasarkan 3 kategori prioritas: `[Tinggi] Primer`, `[Sedang] Sekunder`, dan `[Rendah] Tersier`.
@@ -29,7 +29,7 @@ Aplikasi desktop berbasis **Java Swing** untuk membantu pengelolaan anggaran bul
 
 ---
 
-## 🏗️ Arsitektur Komponen GUI (Java Swing)
+##  Arsitektur Komponen GUI (Java Swing)
 
 Struktur kode aplikasi ini dibangun dengan menerapkan klasifikasi komponen GUI Java Swing berikut:
 
@@ -43,7 +43,7 @@ Struktur kode aplikasi ini dibangun dengan menerapkan klasifikasi komponen GUI J
 
 ---
 
-## 📂 Struktur File Proyek
+##  Struktur File Proyek
 
 ```text
 SmartWalletPlanner/
