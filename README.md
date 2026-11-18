@@ -43,3 +43,6 @@ Struktur kode aplikasi ini dibangun dengan menerapkan klasifikasi komponen GUI J
 
 ---
 
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
