@@ -43,12 +43,3 @@ Struktur kode aplikasi ini dibangun dengan menerapkan klasifikasi komponen GUI J
 
 ---
 
-##  Struktur File Proyek
-
-```text
-SmartWalletPlanner/
-├── AppUtama.java         # Kelas utama (JFrame), pengatur tab, status bar, dan WindowAdapter
-├── PanelKeuangan.java    # Panel pencatatan pengeluaran, prioritas, dan kalkulasi sisa budget
-├── PanelTabungan.java    # Panel pencatatan tabungan, progress bar, dan target tabungan
-├── PanelCatatan.java     # Panel catatan evaluasi finansial bulanan
-└── README.md             # Dokumentasi proyek
