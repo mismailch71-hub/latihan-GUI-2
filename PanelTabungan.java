@@ -6,37 +6,37 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class PanelTabungan extends JPanel implements ActionListener, KeyListener {
-    
-    private JTextField txtKeteranganTabungan, txtNominalTabungan;
-    private JButton btnSetor, btnTarik, btnUbahTarget;
+
+    private JTextField txtSumberTabungan, txtNominalTabungan;
+    private JButton btnSetor, btnHapusTabungan, btnUbahTarget;
     private JLabel lblTotalTabungan, lblInfoTarget;
     private JProgressBar progressTabungan;
     private DefaultListModel<String> modelRiwayatTabungan;
     private JList<String> listRiwayatTabungan;
 
     private JFrame parentFrame;
-    private PanelKeuangan panelKeuangan;
     private JLabel lblStatus;
 
     private int totalTabungan = 0;
-    private int targetTabungan = 500000;
+    private int targetTabungan = 1000000;
 
-    public PanelTabungan(JFrame parentFrame, PanelKeuangan panelKeuangan, JLabel lblStatus) {
+    public PanelTabungan(JFrame parentFrame, JLabel lblStatus) {
         this.parentFrame = parentFrame;
-        this.panelKeuangan = panelKeuangan;
         this.lblStatus = lblStatus;
-            
+
         setLayout(new BorderLayout(8, 8));
 
+        // Form Input
         JPanel panelForm = new JPanel(new GridLayout(2, 2, 5, 5));
-        panelForm.add(new JLabel("Tujuan / Keterangan Tabungan:"));
-        txtKeteranganTabungan = new JTextField();
-        panelForm.add(txtKeteranganTabungan);
+        panelForm.add(new JLabel(" Sumber Dana / Keterangan:"));
+        txtSumberTabungan = new JTextField();
+        panelForm.add(txtSumberTabungan);
 
-        panelForm.add(new JLabel(" Nominal Setor Tabungan (Rp):"));
+        panelForm.add(new JLabel(" Nominal Tabungan (Rp):"));
         txtNominalTabungan = new JTextField();
         panelForm.add(txtNominalTabungan);
 
+        // Panel Tengah
         JPanel panelTengah = new JPanel(new BorderLayout(5, 5));
 
         JPanel panelHeaderTabungan = new JPanel(new GridLayout(3, 1, 3, 3));
@@ -44,7 +44,7 @@ public class PanelTabungan extends JPanel implements ActionListener, KeyListener
         lblTotalTabungan.setFont(new Font("Times New Roman", Font.BOLD, 15));
         lblTotalTabungan.setForeground(new Color(0, 102, 204));
 
-        lblInfoTarget = new JLabel("Target Tabungan Bulanan: Rp 500.000", SwingConstants.CENTER);
+        lblInfoTarget = new JLabel("Target Tabungan: Rp 1.000.000", SwingConstants.CENTER);
 
         progressTabungan = new JProgressBar(0, targetTabungan);
         progressTabungan.setValue(0);
@@ -56,19 +56,19 @@ public class PanelTabungan extends JPanel implements ActionListener, KeyListener
 
         modelRiwayatTabungan = new DefaultListModel<>();
         listRiwayatTabungan = new JList<>(modelRiwayatTabungan);
-
         JScrollPane scrollTabungan = new JScrollPane(listRiwayatTabungan);
 
         panelTengah.add(panelHeaderTabungan, BorderLayout.NORTH);
         panelTengah.add(scrollTabungan, BorderLayout.CENTER);
 
+        // Panel Tombol
         JPanel panelTombol = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
-        btnSetor = new JButton("Setor dari Budget");
-        btnTarik = new JButton("Tarik ke Budget");
+        btnSetor = new JButton("Tambah Tabungan");
+        btnHapusTabungan = new JButton("Hapus Riwayat");
         btnUbahTarget = new JButton("Ubah Target");
 
         panelTombol.add(btnSetor);
-        panelTombol.add(btnTarik);
+        panelTombol.add(btnHapusTabungan);
         panelTombol.add(btnUbahTarget);
 
         add(panelForm, BorderLayout.NORTH);
@@ -76,44 +76,44 @@ public class PanelTabungan extends JPanel implements ActionListener, KeyListener
         add(panelTombol, BorderLayout.SOUTH);
 
         btnSetor.addActionListener(this);
-        btnTarik.addActionListener(this);
+        btnHapusTabungan.addActionListener(this);
         btnUbahTarget.addActionListener(this);
         txtNominalTabungan.addKeyListener(this);
     }
 
-    @Override 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSetor) {
-            setorTabungan();
-        } else if (e.getSource() == btnTarik) {
-            tarikTabungan();
+            tambahTabungan();
+        } else if (e.getSource() == btnHapusTabungan) {
+            hapusTabungan();
         } else if (e.getSource() == btnUbahTarget) {
-            btnUbahTarget();
+            ubahTargetTabungan();
         }
     }
 
-    @Override 
+    @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            setorTabungan();
+            tambahTabungan();
         }
     }
 
-    @Override 
+    @Override
     public void keyTyped(KeyEvent e) {}
 
-    @Override 
+    @Override
     public void keyReleased(KeyEvent e) {
         lblStatus.setText(" Status: Mengetik nominal tabungan Rp " + txtNominalTabungan.getText() + "...");
     }
 
-    private void setorTabungan() {
-        String keterangan = txtKeteranganTabungan.getText().trim();
+    private void tambahTabungan() {
+        String sumber = txtSumberTabungan.getText().trim();
         String strNominal = txtNominalTabungan.getText().trim();
 
-        if (keterangan.isEmpty() || strNominal.isEmpty()) {
+        if (sumber.isEmpty() || strNominal.isEmpty()) {
             JOptionPane.showMessageDialog(parentFrame,
-                "Keterangan dan nominal tabungan tidak boleh kosong!",
+                "Sumber dana dan nominal tabungan tidak boleh kosong!",
                 "Error Input", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -127,24 +127,18 @@ public class PanelTabungan extends JPanel implements ActionListener, KeyListener
                 return;
             }
 
-            if (!panelKeuangan.potongBudgetUntukTabungan(nominal, keterangan)) {
-                JOptionPane.showMessageDialog(parentFrame, 
-                    "Sisa budget bulanan tidak mencukupi untuk ditabung!",
-                    "Peringatan Budget", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
+            // Langsung menambah total tabungan tanpa memotong budget pengeluaran
             totalTabungan += nominal;
-            modelRiwayatTabungan.addElement("[Setor] " + keterangan + " (Rp " + nominal + ")");
+            modelRiwayatTabungan.addElement("[Masuk] " + sumber + " (+Rp " + nominal + ")");
             updateTampilanTabungan();
 
-            txtKeteranganTabungan.setText("");
+            txtSumberTabungan.setText("");
             txtNominalTabungan.setText("");
-            lblStatus.setText(" Status: Berhasil menabung " + keterangan + " sebesar Rp " + String.format("%,d", nominal));
+            lblStatus.setText(" Status: Tabungan bertambah Rp " + String.format("%,d", nominal) + " dari " + sumber);
 
             if (totalTabungan >= targetTabungan) {
                 JOptionPane.showMessageDialog(parentFrame,
-                    "Selamat! Target tabungan bulanan Anda telah tercapai!",
+                    "Selamat! Target tabungan Anda telah tercapai!",
                     "Target Tercapai", JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -155,11 +149,11 @@ public class PanelTabungan extends JPanel implements ActionListener, KeyListener
         }
     }
 
-    private void tarikTabungan() {
+    private void hapusTabungan() {
         int selectedIndex = listRiwayatTabungan.getSelectedIndex();
         if (selectedIndex == -1) {
             JOptionPane.showMessageDialog(parentFrame,
-                "Pilih riwayat setoran tabungan yang ingin ditarik kembali ke budget!",
+                "Pilih riwayat tabungan yang ingin dihapus!",
                 "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -167,28 +161,27 @@ public class PanelTabungan extends JPanel implements ActionListener, KeyListener
         String item = modelRiwayatTabungan.getElementAt(selectedIndex);
         try {
             String strNominal = item.substring(item.lastIndexOf("Rp ") + 3, item.length() - 1);
-            int nominalTarik = Integer.parseInt(strNominal);
+            int nominalHapus = Integer.parseInt(strNominal);
 
-            totalTabungan -= nominalTarik;
-            panelKeuangan.kembaliBudgetDariTabungan(nominalTarik);
+            totalTabungan -= nominalHapus;
             modelRiwayatTabungan.remove(selectedIndex);
 
             updateTampilanTabungan();
-            lblStatus.setText(" Status: Dana tabungan Rp " + String.format("%,d", nominalTarik) + " dikembalikan ke budget.");
+            lblStatus.setText(" Status: Riwayat tabungan dihapus, total dikurangi Rp " + String.format("%,d", nominalHapus));
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(parentFrame, "Gagal memproses penarikan tabungan.");
+            JOptionPane.showMessageDialog(parentFrame, "Gagal menghapus riwayat tabungan.");
         }
     }
 
     private void ubahTargetTabungan() {
         String input = JOptionPane.showInputDialog(parentFrame,
-            "Masukkan target tabungan bulanan baru (Rp):",
+            "Masukkan target tabungan baru (Rp):",
             targetTabungan);
 
         if (input != null && !input.trim().isEmpty()) {
             try {
                 int targetBaru = Integer.parseInt(input.trim());
-                if(targetBaru > 0) {
+                if (targetBaru > 0) {
                     targetTabungan = targetBaru;
                     progressTabungan.setMaximum(targetTabungan);
                     updateTampilanTabungan();
@@ -204,9 +197,7 @@ public class PanelTabungan extends JPanel implements ActionListener, KeyListener
 
     private void updateTampilanTabungan() {
         lblTotalTabungan.setText("Total Tabungan Terkumpul: Rp " + String.format("%,d", totalTabungan));
-        lblInfoTarget.setText("Target Tabungan Bulanan: Rp " + String.format("%,d", targetTabungan));
+        lblInfoTarget.setText("Target Tabungan: Rp " + String.format("%,d", targetTabungan));
         progressTabungan.setValue(Math.min(totalTabungan, targetTabungan));
     }
 }
-
-

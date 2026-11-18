@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import java.awt.*;
 import  java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -25,7 +23,7 @@ public class AppUtama extends JFrame {
         lblStatus.setPreferredSize(new Dimension(getWidth(), 28));
 
         panelKeuangan = new PanelKeuangan(this, lblStatus);
-        panelTabungan = new PanelTabungan(this, panelKeuangan, lblStatus);
+        panelTabungan = new PanelTabungan(this, lblStatus); // Parameter panelKeuangan dihapus
         panelCatatan = new PanelCatatan();
 
         tabbedPane.addTab("Pengelola Keuangan & Prioritas", panelKeuangan);

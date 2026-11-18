@@ -198,9 +198,27 @@ public class PanelKeuangan extends JPanel implements ActionListener, KeyListener
             }
 
             try {
-                
-            }
+                String strNominal = item.substring(item.lastIndexOf("Rp ") + 3, item.length() - 1);
+                int nominalKembali = Integer.parseInt(strNominal);
+                sisaBudget += nominalKembali;
+            } catch (Exception ex) {}
+
+            modelList.remove(selectedIndex);
+            updateTampilanBudget();
+            lblStatus.setText(" Status: Pengeluaran berhasil dihapus dan budget dikembalikan.");
+        } else {
+            JOptionPane.showMessageDialog(parentFrame,
+                "Pilih item pengeluaran yang ingin dihapus!",
+                "Peringatan", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
+    private void updateTampilanBudget() {
+        lblSisaBudget.setText("Sisa Budget Bulan Ini: Rp " + String.format("%,d", sisaBudget));
+        if (sisaBudget < 200000) {
+            lblSisaBudget.setForeground(Color.RED);
+        } else {
+            lblSisaBudget.setForeground(new Color(0, 128, 0));
+        }
+    }
 }
